@@ -11,11 +11,10 @@ import kotlin.test.assertTrue
 class GameTest {
     val player1 = Player("Hashem")
     val player2 = Player("Kira")
-    var reserveStack = mutableListOf<Card>()
     var drawStack = mutableListOf<Card>()
-    var pyramide = mutableListOf<Card>()
+    var pyramid = mutableListOf<MutableList<Card>>()
 
-    val game = Game(player1,player2,player1,reserveStack,drawStack,pyramide)
+    val game = Game(player1,player2,player1,pyramid,drawStack)
 
     /**
      * test if tha passCounter starts from zero
