@@ -15,12 +15,12 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
      *
      */
     fun drawCard():Unit{
-        var  game = rootService.currentGame
+        val  game = rootService.currentGame
         checkNotNull(game)
         check(game.drawStack.isNotEmpty()){
             "The Stack is empty"
         }
-        var card = game.drawStack.removeFirst()
+        val card = game.drawStack.removeFirst()
         card.isFaceUp = true
         game.reserveStack.add(0,card)
         if(game.reserveStack.size > 1){
@@ -36,10 +36,10 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
      * this method changes the turn of the players
      */
     private fun changePlayer():Unit{
-        var game = rootService.currentGame
+        val game = rootService.currentGame
         checkNotNull(game)
-        var player1 = game.player1
-        var player2 = game.player2
+        val player1 = game.player1
+        val player2 = game.player2
         if(game.currentPlayer.equals(player1)) game.currentPlayer = player2
         else game.currentPlayer = player1
         onAllRefreshables{refreshAfterSwitchPlayer()}
@@ -74,7 +74,7 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
         check(checkPair(card1,card2)){
             "The sum of the two cards is not 15"
         }
-        var currentPlayer = game.currentPlayer
+        val currentPlayer = game.currentPlayer
         if(card1.value.equals("A") || card2.value.equals("A")){
             currentPlayer.point ++
         }

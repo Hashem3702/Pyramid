@@ -31,8 +31,8 @@ class ServiceTest {
         assertTrue(testRefreshable.refreshAfterNewGameCalled)
         assertNotNull(mc.currentGame)
 
-        var currentGame= mc.currentGame
-        assertNotEquals(currentGame!!.player1.name,currentGame!!.player2.name)
+        val currentGame= mc.currentGame
+        assertNotEquals(currentGame!!.player1.name,currentGame.player2.name)
         assertNotNull(currentGame.currentPlayer)
         assertEquals(7,currentGame.pyramid[6].size)
         assertEquals(24,currentGame.drawStack.size)
@@ -103,7 +103,7 @@ class ServiceTest {
         mc.gameService.startNewGame("Hashem","Kira")
         val currentGame = mc.currentGame
         checkNotNull(currentGame)
-        var currentPlayer = currentGame.currentPlayer
+        val currentPlayer = currentGame.currentPlayer
 
         mc.spielerService.pass()
 

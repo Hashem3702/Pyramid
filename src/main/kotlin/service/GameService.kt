@@ -46,7 +46,7 @@ class GameService (private val rootService: RootService):AbstractRefreshingServi
         val player1 = Player(player1Name)
         val player2 = Player(player2Name)
 
-        var currentPlayer = mutableListOf<Player>(player1,player2).random()
+        val currentPlayer = mutableListOf<Player>(player1,player2).random()
 
         val game = Game(player1,
                         player2,
