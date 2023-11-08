@@ -143,10 +143,10 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
          {
             return false
         }
-        if((game.reserveStack.contains(card1) && game.reserveStack.first() != card1) ||
-            (game.reserveStack.contains(card2) && game.reserveStack.first() != card2)){
-            return false
-        }
+        if(game.reserveStack.contains(card1) && game.reserveStack.first() != card1) return false
+
+        if  (game.reserveStack.contains(card2) && game.reserveStack.first() != card2) return false
+
         return true
     }
 
