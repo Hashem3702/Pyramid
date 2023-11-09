@@ -21,6 +21,7 @@ class GameService (private val rootService: RootService):AbstractRefreshingServi
                 )
             )
         }
+        list.shuffle()
         return list
     }
 
@@ -55,6 +56,7 @@ class GameService (private val rootService: RootService):AbstractRefreshingServi
                         cards
             )
         rootService.currentGame = game
+        rootService.spielerService.revealCards()
         onAllRefreshables { refreshAfterNewGame() }
     }
 
@@ -69,6 +71,7 @@ class GameService (private val rootService: RootService):AbstractRefreshingServi
                 allCards.removeFirst()
             }
         }
+
         return pyramid
     }
 

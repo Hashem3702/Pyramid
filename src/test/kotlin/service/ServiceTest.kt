@@ -1,8 +1,11 @@
 package service
 
 import entity.Card
+import entity.CardSuit
+import entity.CardValue
+
 import org.junit.jupiter.api.Test
-import view.Refreshable
+
 import kotlin.test.*
 
 
@@ -87,12 +90,16 @@ class ServiceTest {
 
         assertEquals(firstDrawStack,currentGame.reserveStack.first())
         assertNotEquals(firstDrawStack,currentGame.drawStack.first())
-        assertEquals(false,currentGame.reserveStack[1].isFaceUp)
+        assertFalse(currentGame.reserveStack[1].isFaceUp)
         assertNotEquals(playerBeforeDraw,currentGame.currentPlayer)
+        currentGame.drawStack.clear()
+        assertFails{mc.spielerService.drawCard()}
+        mc.currentGame = null
+        assertFails {mc.spielerService.drawCard() }
     }
 
     /**
-     * Method to test the pass funktion in playerService
+     * Method to test the pass function in playerService
      */
     @Test
     fun testPass(){
@@ -113,6 +120,8 @@ class ServiceTest {
         mc.spielerService.pass()
         assertTrue (testRefreshable.refreshAfterGameEndCalled)
         assertTrue(testRefreshable.refreshAfterPassCalled)
+        mc.currentGame = null
+        assertFails {mc.spielerService.pass() }
     }
 
     /**
@@ -129,13 +138,105 @@ class ServiceTest {
         checkNotNull(currentGame)
 
         var allFaceUp = true
+         currentGame.pyramid.forEach { list->
+            if(list.first().isFaceUp && list.last().isFaceUp){
+                allFaceUp = false
+            }
+
+        }
+        assertFalse(allFaceUp)
+
+         allFaceUp = true
         mc.spielerService.revealCards()
 
-        currentGame.pyramid.forEach { mulist->
-            if(!mulist.first().isFaceUp || !mulist.last().isFaceUp){
+        currentGame.pyramid.forEach { list->
+            if(!list.first().isFaceUp || !list.last().isFaceUp){
                 allFaceUp = false
             }
         }
         assertTrue(allFaceUp)
+        mc.currentGame = null
+        assertFails {mc.spielerService.revealCards() }
+    }
+
+    /**
+     * method to test the function removePair
+     */
+    @Test
+    fun testRemovePair(){
+        val testRefreshable = TestRefreshable()
+        val mc = RootService()
+        mc.addRefreshable(testRefreshable)
+
+        mc.gameService.startNewGame("Hashem","Kira")
+        var currentGame = mc.currentGame
+        checkNotNull(currentGame)
+
+        assertFails { mc.spielerService.removePair(Card(CardSuit.SPADES,CardValue.ACE),
+            Card(CardSuit.SPADES,CardValue.ACE)) }
+
+        var  card1  = Card(CardSuit.SPADES,CardValue.ACE)
+        var  card2  = Card(CardSuit.SPADES,CardValue.ACE)
+        card1.isFaceUp = true
+        card2.isFaceUp= true
+
+        assertFails { mc.spielerService.removePair(card1,card2) }
+
+        card1 = Card(CardSuit.SPADES,CardValue.EIGHT)
+        card2 = Card(CardSuit.SPADES,CardValue.EIGHT)
+
+        card1.isFaceUp = true
+        card2.isFaceUp= true
+
+        assertFails { mc.spielerService.removePair(card1,card2) }
+
+        mc.spielerService.drawCard()
+        mc.spielerService.drawCard()
+        card1 = currentGame.reserveStack[1]
+        card2 = Card(CardSuit.SPADES,CardValue.ACE)
+
+        card1.isFaceUp = true
+        card2.isFaceUp= true
+
+        assertFails { mc.spielerService.removePair(card1,card2) }
+
+        mc.spielerService.drawCard()
+        mc.spielerService.drawCard()
+        card1 = Card(CardSuit.SPADES,CardValue.ACE)
+        card2 = currentGame.reserveStack[1]
+
+        card1.isFaceUp = true
+        card2.isFaceUp= true
+
+        assertFails { mc.spielerService.removePair(card1,card2) }
+
+
+        mc.currentGame = null
+        mc.gameService.startNewGame("Hashem","Kira")
+        currentGame = mc.currentGame
+        checkNotNull(currentGame)
+
+        card1 = Card(CardSuit.SPADES,CardValue.ACE)
+        card2 = Card(CardSuit.SPADES,CardValue.EIGHT)
+
+        card1.isFaceUp = true
+        card2.isFaceUp= true
+
+        currentGame.pyramid[0][0] = card1
+        currentGame.pyramid[1][0] = card2
+
+        mc.spielerService.removePair(card1,card2)
+
+        if(currentGame.currentPlayer == currentGame.player1){
+            currentGame.currentPlayer = currentGame.player2
+        }
+        assertEquals(1,currentGame.currentPlayer.point)
+        assertTrue(currentGame.pyramid[0].isEmpty())
+        assertTrue (!currentGame.pyramid[1].contains(card2))
+        assertTrue(testRefreshable.refreshAfterTurnCardsCalled)
+
+
+
+
     }
 }

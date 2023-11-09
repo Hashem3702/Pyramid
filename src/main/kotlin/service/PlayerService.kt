@@ -1,7 +1,7 @@
 package service
 
 import entity.Card
-import entity.Player
+
 
 /**
  * Service layer class that provides the logic for the three possible actions a player
@@ -11,10 +11,10 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
 
     /**
      * this Method enables the player to draw a card from the drawStack
-     * instead of choosing tow cards from the pyramid
+     * instead of choosing two cards from the pyramid
      *
      */
-    fun drawCard():Unit{
+    fun drawCard(){
         val  game = rootService.currentGame
         checkNotNull(game)
         check(game.drawStack.isNotEmpty()){
@@ -35,13 +35,19 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
     /**
      * this method changes the turn of the players
      */
-    private fun changePlayer():Unit{
+    private fun changePlayer(){
         val game = rootService.currentGame
-        checkNotNull(game)
+        checkNotNull(game){"There is no game"}
         val player1 = game.player1
         val player2 = game.player2
-        if(game.currentPlayer.equals(player1)) game.currentPlayer = player2
-        else game.currentPlayer = player1
+        if(game.currentPlayer == player1){
+            game.currentPlayer = player2
+        }
+        else {
+            game.currentPlayer = player1
+        }
+
+
         onAllRefreshables{refreshAfterSwitchPlayer()}
     }
 
@@ -49,14 +55,12 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
      * the method will be used ,if  one of the players press pass
      */
 
-    fun pass():Unit{
+    fun pass(){
         val game = rootService.currentGame
-        checkNotNull(game)
+        checkNotNull(game){"There is no game"}
         game.passCounter += 1
-        val playerList = listOf<Player>(game.player1,game.player2)
         if(game.passCounter == 2){
             rootService.gameService.endGame()
-            onAllRefreshables{refreshAfterGameEnd(playerList)}
         }
         else{
             changePlayer()
@@ -65,21 +69,20 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
     }
 
     /**
-     * this Method will be used to delete the choosen Cards form the pyramid
+     * this Method will be used to delete the chosen Cards form the pyramid
      */
 
-    fun removePair(card1:Card,card2:Card):Unit{
+    fun removePair(card1:Card,card2:Card){
         val game = rootService.currentGame
         checkNotNull(game)
-        check(checkPair(card1,card2)){
+        require(checkPair(card1,card2)){
             "The sum of the two cards is not 15"
         }
-        val currentPlayer = game.currentPlayer
-        if(card1.value.equals("A") || card2.value.equals("A")){
-            currentPlayer.point ++
+        if(card1.value.toString() =="A" || card2.value.toString()== "A"){
+            game.currentPlayer.point ++
         }
         else{
-            currentPlayer.point += 2
+          game.currentPlayer.point += 2
         }
         if(game.reserveStack.contains(card1)){
             game.reserveStack.removeFirst()
@@ -117,63 +120,67 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
         }
         else{
             revealCards()
+            game.passCounter = 0
+            changePlayer()
+            onAllRefreshables { refreshAfterRemovePair(card1,card2) }
         }
-        onAllRefreshables { refreshAfterRemovePair(card1,card2) }
 
     }
 
     /**
-     * This Method helps to check ,if the choosen cards can be taken or not
+     * This Method helps to check ,if the chosen cards can be taken or not
      */
     private fun checkPair(card1:Card,card2:Card):Boolean {
         val game = rootService.currentGame
         checkNotNull(game)
         if (!card1.isFaceUp ||
             !card2.isFaceUp ||
-            card1.value.toString().equals(card2.value.toString())
+            card1.value.toString() == card2.value.toString()
         ) {
             return false
         }
-        if (card1.value.toString().equals("A") && card2.value.toString().equals("A")) {
-            return false;
+        if (card1.value.toString() == "A" && card2.value.toString() == "A") {
+            return false
         }
-        if (card1.value.toString().toInt() + card2.value.toString().toInt() != 15 &&
-            !card1.value.toString().equals("A") &&
-            !card2.value.toString().equals("A"))
+        if (card1.value.toInt() + card2.value.toInt() != 15 &&
+            card1.value.toString() != "A" &&
+            card2.value.toString() != "A"
+        )
          {
             return false
         }
         if(game.reserveStack.contains(card1) && game.reserveStack.first() != card1) return false
 
-        if  (game.reserveStack.contains(card2) && game.reserveStack.first() != card2) return false
-
-        return true
+        return !(game.reserveStack.contains(card2) && game.reserveStack.first() != card2)
     }
 
     /**
      * this method checks ,if the faces of the first and the last elements of all
      * the Lists of the pyramid  are open or not ... if not then isFaceUp will be true
      */
-     fun revealCards():Unit{
-        // die Implementierung der Methode
+     fun revealCards(){
+        // die Implementer der Methode
         val game = rootService.currentGame
-        checkNotNull(game)
+        checkNotNull(game){"There is no game"}
         for(listInPyramid in game.pyramid){
-            if(listInPyramid.first().isFaceUp == false) {
-                game.pyramid[game.pyramid.indexOf(listInPyramid)].first().isFaceUp=true
-              //  listInPyramid.first().isFaceUp == true
+            if(listInPyramid.isNotEmpty()) {
+                if (!listInPyramid.first().isFaceUp) {
+                    game.pyramid[game.pyramid.indexOf(listInPyramid)].first().isFaceUp = true
+                    //  listInPyramid.first().isFaceUp == true
+                }
+                if (!listInPyramid.last().isFaceUp) {
+                    game.pyramid[game.pyramid.indexOf(listInPyramid)].last().isFaceUp = true
+                    // listInPyramid.last().isFaceUp == true
+                }
             }
-            if(listInPyramid.last().isFaceUp == false){
-                game.pyramid[game.pyramid.indexOf(listInPyramid)].last().isFaceUp=true
-               // listInPyramid.last().isFaceUp == true
-            }
+            onAllRefreshables { refreshAfterTurnCards(listInPyramid) }
         }
     }
 
     /**
      * Method to check if the pyramid is empty or not
      */
-    fun pyramidIsEmpty(pyramid:MutableList<MutableList<Card>>):Boolean{
+    private fun pyramidIsEmpty(pyramid:MutableList<MutableList<Card>>):Boolean{
         var result = true
         for(list in pyramid){
             if(list.isNotEmpty()){
