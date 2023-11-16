@@ -20,7 +20,7 @@ class PlayerTest {
     }
 
     /**
-     * check if the both player's points equals zero at the begining of the Game.
+     * check if the both player's points equals zero at the beginning of the Game.
      */
 
     @Test

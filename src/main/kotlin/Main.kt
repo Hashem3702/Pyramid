@@ -1,9 +1,9 @@
-import view.SopraApplication
+import view.PyramidApplication
 
 /**
  * the mein method of the example
  */
 fun main() {
-    SopraApplication().show()
+    PyramidApplication().show()
     println("Application ended. Goodbye")
 }

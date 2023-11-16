@@ -130,7 +130,7 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
     /**
      * This Method helps to check ,if the chosen cards can be taken or not
      */
-    private fun checkPair(card1:Card,card2:Card):Boolean {
+     fun checkPair(card1:Card,card2:Card):Boolean {
         val game = rootService.currentGame
         checkNotNull(game)
         if (!card1.isFaceUp ||

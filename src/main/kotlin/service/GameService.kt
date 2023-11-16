@@ -84,15 +84,9 @@ class GameService (private val rootService: RootService):AbstractRefreshingServi
         val game = rootService.currentGame
         checkNotNull(game)
         val playerList = mutableListOf<Player>(game.player1,game.player2)
-        if(playerList[0].point > playerList[1].point){
+
             onAllRefreshables { refreshAfterGameEnd(playerList) }
-        }
-        else if (playerList[1].point > playerList[0].point){
-            onAllRefreshables { refreshAfterGameEnd(playerList) }
-        }
-        else{
-            onAllRefreshables { refreshAfterGameEnd(playerList) }
-        }
+
         rootService.currentGame = null
     }
 
