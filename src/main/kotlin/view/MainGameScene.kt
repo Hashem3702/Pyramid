@@ -15,7 +15,7 @@ import service.CardImageLoader
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.core.Alignment
 
-
+//
 class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 1080), Refreshable {
     private val pairs = mutableListOf<Card>()
 
