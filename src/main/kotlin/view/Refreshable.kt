@@ -57,7 +57,7 @@ interface Refreshable {
    * perform refreshes that are necessary after the end of the game
    */
 
-  fun refreshAfterGameEnd(result:List<Player>):Unit{}
+  fun refreshAfterGameEnd(result:MutableList<Player>):Unit{}
 
 
 }

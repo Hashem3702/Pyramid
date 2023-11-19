@@ -224,13 +224,10 @@ class ServiceTest {
 
         currentGame.pyramid[0][0] = card1
         currentGame.pyramid[1][0] = card2
-
+        val p = currentGame.currentPlayer
         mc.spielerService.removePair(card1,card2)
 
-        if(currentGame.currentPlayer == currentGame.player1){
-            currentGame.currentPlayer = currentGame.player2
-        }
-        assertEquals(1,currentGame.currentPlayer.point)
+        assertEquals(1,p.point)
         assertTrue(currentGame.pyramid[0].isEmpty())
         assertTrue (!currentGame.pyramid[1].contains(card2))
         assertTrue(testRefreshable.refreshAfterTurnCardsCalled)

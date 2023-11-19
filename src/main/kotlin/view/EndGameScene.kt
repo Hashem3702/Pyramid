@@ -39,22 +39,9 @@ class EndGameScene(private val rootService: RootService): MenuScene(400, 1080), 
         addComponents( p1Score, p2Score, gameResult, newGameButton, quitButton,)
     }
 
-    private fun Player.scoreString(): String = "${this.name} : ${this.point} points."
+    override fun refreshAfterGameEnd(result:MutableList<Player>) {
+        p1Score.text = "${result[0].name} : ${result[0].point} points."
+        p2Score.text = "${result[1].name} : ${result[1].point} points."
 
-    private fun Game.gameResultString(): String {
-        val p1Score = player1.point
-        val p2Score = player2.point
-        return when {
-            p1Score - p2Score > 0 -> "${player1.name} Won!"
-            p1Score - p2Score < 0 -> "${player2.name} Won!"
-            else -> "Draw. No winner."
-        }
-    }
-    override fun refreshAfterGameEnd(result:List<Player>) {
-        val game = rootService.currentGame
-        checkNotNull(game) { "No game running" }
-        p1Score.text = game.player1.scoreString()
-        p2Score.text = game.player2.scoreString()
-        gameResult.text = game.gameResultString()
     }
 }

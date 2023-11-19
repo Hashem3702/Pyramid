@@ -11,7 +11,11 @@ class PyramidApplication():BoardGameApplication("Pyramid"),Refreshable {
     private val rootService = RootService()
 
     // This is where the actual game takes place
-    private val mainGameScene:MainGameScene = MainGameScene(rootService)
+    private val mainGameScene:MainGameScene = MainGameScene(rootService).apply {
+        mainMenuButton.onMouseClicked = {
+            this@PyramidApplication.showMenuScene(newGameScene)
+        }
+    }
 
     // This menu scene is shown after each finished game (i.e. no more cards to draw)
     private val endGameMenuScene = EndGameScene(rootService).apply {
@@ -26,6 +30,7 @@ class PyramidApplication():BoardGameApplication("Pyramid"),Refreshable {
     // This menu scene is shown after application start and if the "new game" button
     // is clicked in the EndGameScene
     private val newGameScene = NewGameScene(rootService).apply {
+
         returnButton.onMouseClicked = {
             exit()
         }
@@ -50,13 +55,14 @@ class PyramidApplication():BoardGameApplication("Pyramid"),Refreshable {
 
             this.showGameScene(mainGameScene)
             this.showMenuScene(newGameScene, 0)
+
         }
 
     override fun refreshAfterNewGame() {
         this.hideMenuScene()
     }
 
-    override fun refreshAfterGameEnd(result:List<Player>) {
+    override fun refreshAfterGameEnd(result:MutableList<Player>) {
         this.showMenuScene(endGameMenuScene)
     }
 

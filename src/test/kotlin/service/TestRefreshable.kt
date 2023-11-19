@@ -53,7 +53,7 @@ class TestRefreshable:Refreshable {
         refreshAfterSwitchPlayerCalled
     }
 
-    override fun refreshAfterGameEnd(result: List<Player>) {
+    override fun refreshAfterGameEnd(result: MutableList<Player>) {
         refreshAfterGameEndCalled = true
     }
 
