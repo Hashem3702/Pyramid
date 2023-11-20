@@ -162,19 +162,23 @@ class PlayerService (private val rootService: RootService):AbstractRefreshingSer
         // die Implementer der Methode
         val game = rootService.currentGame
         checkNotNull(game){"There is no game"}
+        val list = mutableListOf<Card>()
         for(listInPyramid in game.pyramid){
             if(listInPyramid.isNotEmpty()) {
                 if (!listInPyramid.first().isFaceUp) {
                     game.pyramid[game.pyramid.indexOf(listInPyramid)].first().isFaceUp = true
+                    list.add(game.pyramid[game.pyramid.indexOf(listInPyramid)].first())
                     //  listInPyramid.first().isFaceUp == true
                 }
                 if (!listInPyramid.last().isFaceUp) {
                     game.pyramid[game.pyramid.indexOf(listInPyramid)].last().isFaceUp = true
+                    list.add(game.pyramid[game.pyramid.indexOf(listInPyramid)].last())
                     // listInPyramid.last().isFaceUp == true
                 }
             }
-            onAllRefreshables { refreshAfterTurnCards(listInPyramid) }
+
         }
+        onAllRefreshables { refreshAfterTurnCards(list) }
     }
 
     /**

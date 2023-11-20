@@ -14,34 +14,43 @@ import tools.aqua.bgw.visual.ImageVisual
 import service.CardImageLoader
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
+import java.awt.Color
 
 //
 class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 1080), Refreshable {
     private val pairs = mutableListOf<Card>()
     private val invisible = CardView(front = Visual.EMPTY, height = 100, width = 50)
 
-    private val passCounter = Label( width = 100, height = 35,
-        posX = 1750, posY =1020, text = "Passcounter: 0")
+    private val passCounter = Label( width = 200, height = 50,
+        posX = 1600, posY =1020, text = "Passcounter: 0",
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual.WHITE)
 
-    private val player1Name =  Label( width = 100, height = 35,
-        posX = 30, posY =40)
+    private val player1Name =  Label( width = 150, height = 50,
+        posX = 30, posY =40, font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual.WHITE
+    )
 
-    private val player2Name =  Label( width = 100, height = 35,
-        posX = 1800, posY =40)
+    private val player2Name =  Label( width = 150, height = 50,
+        posX = 1750, posY =40,font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual.WHITE)
 
-    private val player1Points = Label( width = 100, height = 35,
-        posX = 30, posY =70, text = "Points: 0")
+    private val player1Points = Label( width = 150, height = 50,
+        posX = 30, posY =90, text = "Points: 0",
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD), visual = ColorVisual.WHITE)
 
-    private val player2Points = Label( width = 100, height = 35,
-        posX = 1800, posY =70, text = "Points: 0")
+    private val player2Points = Label( width = 150, height = 50,
+        posX = 1750, posY =90, text = "Points: 0",
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD), visual = ColorVisual.WHITE)
 
     private val confirmButton =Button(
-            width = 140, height = 35,
-    posX = 1750, posY = 900,
-    text = "Confirm Selection")
-    .apply {
-        visual = ColorVisual(221, 136, 136)
+            width = 300, height = 85,
+    posX = 1600, posY = 800,
+    text = "Confirm Selection",
+        font = Font(24.0, Color.WHITE,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual(Color(0x81BA29)) ).apply {
         onMouseClicked = {
             rootService.currentGame?.let { game ->
                 if(pairs.size==2) {
@@ -52,23 +61,26 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
             }
         }
     }
-    private val passButton = Button( width = 140, height = 35,
-        posX = 1750, posY = 960,
-        text = "Pass")
+    private val passButton = Button( width = 300, height = 85,
+        posX = 1600, posY = 900,
+        text = "Pass",
+        font = Font(24.0, Color.WHITE,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual(Color(0x0500FF)))
         .apply {
-            visual = ColorVisual(221, 136, 136)
             onMouseClicked = {
                 rootService.currentGame?.let { game ->
                     rootService.spielerService.pass()
                 }
             }
         }
-    val mainMenuButton = Button( width = 140, height = 35,
+    val mainMenuButton = Button( width = 300, height = 85,
         posX = 20, posY = 960,
-        text = "Main Menu")
-        .apply {
-            visual = ColorVisual(221, 136, 136)
-        }
+        text = "Main Menu",
+        font = Font(24.0, Color.WHITE,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual(Color(0xFDB55B))).apply {
+
+    }
+
     private val drawStack = LabeledStackView(posX = 1830, posY = 350, "Draw Stack").apply {
         onMouseClicked = {
             rootService.currentGame?.let { game ->
@@ -106,7 +118,7 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
     private val cardMap : BidirectionalMap<Card,CardView> = BidirectionalMap()
 
     init {
-        background = ColorVisual(108, 168, 59)
+        background = ColorVisual(Color(0xFFE9D9))
         // dark green for "Casino table" flair
 
         addComponents(
@@ -149,6 +161,14 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         player2Points.text = "Points: ${game.player2.point}"
         player1Name.text = game.player1.name
         player2Name.text = game.player2.name
+        if(game.currentPlayer.name == player1Name.text){
+            player1Name.visual = ColorVisual.GREEN
+            player2Name.visual = ColorVisual.WHITE
+        }
+        else{
+            player2Name.visual = ColorVisual.GREEN
+            player1Name.visual = ColorVisual.WHITE
+        }
 
     }
 
@@ -186,12 +206,13 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
                     pairs.removeLast()
                 }
             } }
-            if(card.isFaceUp){
+           if(card.isFaceUp){
                 cardView.showFront()
             }
             else{
                 cardView.showBack()
             }
+
             rowLinearLayout.add(cardView)
             cardMap.add(card to cardView)
         }
@@ -227,68 +248,54 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
 
         cardView1.removeFromParent()
         cardView2.removeFromParent()
-       if(reserveStack.contains(cardView1)) {
-           reserveStack.remove(cardView1)
-       }
 
-        if(reserveStack.contains(cardView2)){
-            reserveStack.remove(cardView2)
-        }
-        if (firstLinearLayout.contains(cardView1)){
-            firstLinearLayout.remove(cardView1)
-        }
-        if(firstLinearLayout.contains(cardView2)){
-            firstLinearLayout.remove(cardView2)
-        }
-        if (secondLinearLayout.contains(cardView1)){
-            secondLinearLayout.remove(cardView1)
-        }
-        if(secondLinearLayout.contains(cardView2)){
-            secondLinearLayout.remove(cardView2)
-        }
-        if (thirdLinearLayout.contains(cardView1)){
-            thirdLinearLayout.remove(cardView1)
-        }
-        if(thirdLinearLayout.contains(cardView2)){
-            thirdLinearLayout.remove(cardView2)
-        }
-        if (fourthLinearLayout.contains(cardView1)){
-            fourthLinearLayout.remove(cardView1)
-        }
-        if(fourthLinearLayout.contains(cardView2)){
-            fourthLinearLayout.remove(cardView2)
-        }
-        if (fifthLinearLayout.contains(cardView1)){
-            fifthLinearLayout.remove(cardView1)
-        }
-        if(fifthLinearLayout.contains(cardView2)){
-            fifthLinearLayout.remove(cardView2)
-        }
-        if (sixthLinearLayout.contains(cardView1)){
-            sixthLinearLayout.remove(cardView1)
-        }
-        if(sixthLinearLayout.contains(cardView2)){
-            sixthLinearLayout.remove(cardView2)
-        }
-        if (seventhLinearLayout.contains(cardView1)){
-            seventhLinearLayout.remove(cardView1)
-        }
-        if(seventhLinearLayout.contains(cardView2)){
-            seventhLinearLayout.remove(cardView2)
-        }
         player1Points.text = "Points : ${game.player1.point}"
         player2Points.text = "Points : ${game.player2.point}"
 
-    }
-
-    override fun refreshAfterTurnCards(card: List<Card>) {
-
 
     }
-    /**private fun turnCards(linearLayout: LinearLayout<CardView>){
-        linearLayout.forEach { cardView ->
-            if()
+
+   override fun refreshAfterTurnCards(cards: List<Card>) {
+       if(cardMap.isNotEmpty()) {
+           cards.forEach { card ->
+               val cardView = cardMap.forward(card)
+               if (secondLinearLayout.contains(cardView)) {
+                   turnCards(secondLinearLayout, cardView)
+               } else if (thirdLinearLayout.contains(cardView)) {
+                   turnCards(thirdLinearLayout, cardView)
+               } else if (fourthLinearLayout.contains(cardView)) {
+                   turnCards(fourthLinearLayout, cardView)
+               } else if (fifthLinearLayout.contains(cardView)) {
+                   turnCards(fifthLinearLayout, cardView)
+               } else if (sixthLinearLayout.contains(cardView)) {
+                   turnCards(sixthLinearLayout, cardView)
+               } else {
+                   turnCards(seventhLinearLayout, cardView)
+               }
+           }
+       }
+
+    }
+    private fun turnCards(linearLayout: LinearLayout<CardView>,cardView:CardView){
+    linearLayout.forEach { card->
+        if(card == cardView){
+            card.showFront()
         }
     }
-*/
+
+    }
+
+
+    override fun refreshAfterSwitchPlayer() {
+        val game = rootService.currentGame
+        checkNotNull(game)
+        if(game.currentPlayer.name == player1Name.text){
+            player1Name.visual = ColorVisual.GREEN
+            player2Name.visual = ColorVisual.WHITE
+        }
+        else{
+            player2Name.visual = ColorVisual.GREEN
+            player1Name.visual = ColorVisual.WHITE
+        }
+    }
 }
