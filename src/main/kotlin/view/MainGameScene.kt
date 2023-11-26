@@ -19,6 +19,7 @@ import tools.aqua.bgw.util.Font
 
 import java.awt.Color
 
+//
 /**
  * This is the main thing for the Pyramid game. The scene shows the complete table at once.
  */

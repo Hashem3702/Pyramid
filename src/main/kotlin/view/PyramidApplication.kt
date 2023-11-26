@@ -4,6 +4,7 @@ import entity.Player
 import service.RootService
 import tools.aqua.bgw.core.BoardGameApplication
 
+//
 /**
  * Implementation of the BGW [BoardGameApplication] for the example card game "Pyramid"
  */
