@@ -6,8 +6,7 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.TextField
-import tools.aqua.bgw.core.MenuScene
+
 import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -17,7 +16,7 @@ import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.visual.Visual
+
 import java.awt.Color
 
 /**
@@ -362,7 +361,7 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         }
 
     }
-    override fun refreshAfterRemovePair(card1:Card,card2:Card):Unit{
+    override fun refreshAfterRemovePair(card1:Card,card2:Card){
         val game = rootService.currentGame
         checkNotNull(game)
         val cardView1 = cardMap.forward(card1)
@@ -376,7 +375,6 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
 
 
     }
-
    override fun refreshAfterTurnCards(cards: List<Card>) {
        if(cardMap.isNotEmpty()) {
            cards.forEach { card ->

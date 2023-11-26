@@ -1,8 +1,8 @@
 package view
 
-import entity.Game
+
 import entity.Player
-import service.RootService
+
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
