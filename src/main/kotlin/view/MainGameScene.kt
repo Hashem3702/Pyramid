@@ -13,15 +13,19 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import service.CardImageLoader
 import tools.aqua.bgw.components.container.LinearLayout
+import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.core.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
 
-//
+/**
+ * This is the main thing for the Pyramid game. The scene shows the complete table at once.
+ */
 class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 1080), Refreshable {
     private val pairs = mutableListOf<Card>()
-    private val invisible = CardView(front = Visual.EMPTY, height = 100, width = 50)
+    private val pairViews = mutableListOf<CardView>()
 
     private val passCounter = Label( width = 200, height = 50,
         posX = 1600, posY =1020, text = "Passcounter: 0",
@@ -29,21 +33,25 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         visual = ColorVisual.WHITE)
 
     private val player1Name =  Label( width = 150, height = 50,
-        posX = 30, posY =40, font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        posX = 30, posY =40,
+        font = Font(24.0, Color.BLACK,"Open Sans", Font.FontWeight.BOLD),
         visual = ColorVisual.WHITE
     )
 
     private val player2Name =  Label( width = 150, height = 50,
-        posX = 1750, posY =40,font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        posX = 1750, posY =40,
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
         visual = ColorVisual.WHITE)
 
     private val player1Points = Label( width = 150, height = 50,
         posX = 30, posY =90, text = "Points: 0",
-        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD), visual = ColorVisual.WHITE)
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual.WHITE)
 
     private val player2Points = Label( width = 150, height = 50,
         posX = 1750, posY =90, text = "Points: 0",
-        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD), visual = ColorVisual.WHITE)
+        font = Font(24.0, Color.BLACK,"Open Sans",Font.FontWeight.BOLD),
+        visual = ColorVisual.WHITE)
 
     private val confirmButton =Button(
             width = 300, height = 85,
@@ -58,6 +66,7 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
                     rootService.spielerService.removePair(pairs[0],pairs[1])
                 }
             // hier muss eine Meldung ausgegeben werden , wenn die List keine zwei Cards hat
+
             }
         }
     }
@@ -81,7 +90,7 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
 
     }
 
-    private val drawStack = LabeledStackView(posX = 1830, posY = 350, "Draw Stack").apply {
+    private val drawStack = LabeledStackView(posX = 1770, posY = 350, "Draw Stack").apply {
         onMouseClicked = {
             rootService.currentGame?.let { game ->
                 rootService.spielerService.drawCard()
@@ -93,27 +102,104 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         onMouseClicked = {
             val game = rootService.currentGame
             checkNotNull(game)
-            pairs.add(0,game.reserveStack.first())
-            if (pairs.size > 2) {
-                pairs.removeLast()
+            /**      pairs.add(0,game.reserveStack.first())
+            this.scale(1.15)
+            pairViews.add(0,this)
+            if(pairs.size >2 ){
+            pairs.removeLast()
+            pairViews.last().scale(1)
+            pairViews.removeLast()
+            }
+             */
+                    pairs.add(0,game.reserveStack.first())
+                    this.peek().scale(1.18)
+                    pairViews.add(0,this.peek())
+                    if(pairs.size > 2) {
+                        pairs.removeLast()
+                        pairViews.last().scale(1)
+                        pairViews.removeLast()
+                }
             }
         }
-    }
 
-    private val firstLinearLayout = LinearLayout<CardView>(posX = 900, posY = 350,width=0,height=200,
-        )
-    private val secondLinearLayout = LinearLayout<CardView>(posX = 875, posY = 450,width=100,height=200,
-        )
-    private val thirdLinearLayout = LinearLayout<CardView>(posX = 850, posY = 550,width=200,height=200,
-        )
-    private val fourthLinearLayout = LinearLayout<CardView>(posX = 825, posY = 650,width=200,height=200,
-        )
-    private val fifthLinearLayout = LinearLayout<CardView>(posX = 800, posY = 750,width=300,height=200,
-        )
-    private val sixthLinearLayout = LinearLayout<CardView>(posX = 775, posY = 850,width=400,height=200,
-        )
-    private val seventhLinearLayout = LinearLayout<CardView>(posX = 750,950,width=500,height=200,
-        )
+
+    private val firstLinearLayout = LinearLayout<CardView>(
+        posX = 461,
+        posY = 0,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        // LinearLayout<CardView>(posX = 900, posY = 350,width=0,height=200,)
+
+    private val secondLinearLayout =  LinearLayout<CardView>(
+        posX = 461,
+        posY = 150,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        // LinearLayout<CardView>(posX = 875, posY = 450,width=100,height=200,)
+
+    private val thirdLinearLayout =LinearLayout<CardView>(
+        posX = 461,
+        posY = 300,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        // LinearLayout<CardView>(posX = 850, posY = 550,width=200,height=200,)
+
+    private val fourthLinearLayout = LinearLayout<CardView>(
+        posX = 461,
+        posY = 450,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        //LinearLayout<CardView>(posX = 825, posY = 650,width=200,height=200,)
+
+    private val fifthLinearLayout = LinearLayout<CardView>(
+        posX = 461,
+        posY = 600,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        // LinearLayout<CardView>(posX = 800, posY = 750,width=300,height=200,)
+
+    private val sixthLinearLayout =LinearLayout<CardView>(
+        posX = 461,
+        posY = 750,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        //LinearLayout<CardView>(posX = 775, posY = 850,width=400,height=200,)
+
+    private val seventhLinearLayout =  LinearLayout<CardView>(
+        posX = 461,
+        posY = 900,
+        orientation = Orientation.HORIZONTAL,
+        alignment = Alignment.CENTER,
+        spacing = 15,
+        width = 1000,
+        height = DEFAULT_CARD_HEIGHT,
+    ).apply { this.scale(0.65) }
+        //LinearLayout<CardView>(posX = 750,950,width=500,height=200,)
+
 
     private val cardMap : BidirectionalMap<Card,CardView> = BidirectionalMap()
 
@@ -145,6 +231,14 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         cardMap.clear()
 
         val cardImageLoader = CardImageLoader()
+        drawStack.clear()
+        fifthLinearLayout.clear()
+        secondLinearLayout.clear()
+        thirdLinearLayout.clear()
+        fourthLinearLayout.clear()
+        fifthLinearLayout.clear()
+        sixthLinearLayout.clear()
+        seventhLinearLayout.clear()
 
         initializeStackView(game.drawStack, drawStack, cardImageLoader)
         initializePyramidView(game.pyramid[0],firstLinearLayout,cardImageLoader)
@@ -177,12 +271,16 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
      * element of [stack] onto it, and adds the newly created view/card pair
      * to the global [cardMap].
      */
-    private fun initializeStackView(stack: MutableList<Card>, stackView: LabeledStackView, cardImageLoader: CardImageLoader) {
+    private fun initializeStackView(stack: MutableList<Card>,
+                                    stackView: LabeledStackView,
+                                    cardImageLoader: CardImageLoader) {
         stackView.clear()
         stack.reversed().forEach { card ->
             val cardView = CardView(
-                height = 150,
-                width = 80,
+                height = 200,
+                        //150,
+                width = 130,
+                        //80,
                 front = ImageVisual(cardImageLoader.frontImageFor(card.suit, card.value)),
                 back = ImageVisual(cardImageLoader.backImage)
             )
@@ -190,20 +288,26 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
             cardMap.add(card to cardView)
         }
     }
-    private fun initializePyramidView(row: MutableList<Card>, rowLinearLayout: LinearLayout<CardView>, cardImageLoader: CardImageLoader) {
+    private fun initializePyramidView(row: MutableList<Card>,
+                                      rowLinearLayout: LinearLayout<CardView>,
+                                      cardImageLoader: CardImageLoader) {
         rowLinearLayout.clear()
         row.forEach { card ->
             val cardView = CardView(
-                height = 100,
-                width = 50,
+                height = 200,
+                width = 130,
                 front = ImageVisual(cardImageLoader.frontImageFor(card.suit, card.value)),
                 back = ImageVisual(cardImageLoader.backImage)
             ).apply { onMouseClicked = {
                 val game = rootService.currentGame
                 checkNotNull(game)
                 pairs.add(0,card)
-                if(pairs.size >2 ){
+                this.scale(1.15)
+                pairViews.add(0,this)
+                if(pairs.size > 2 ){
                     pairs.removeLast()
+                    pairViews.last().scale(1)
+                    pairViews.removeLast()
                 }
             } }
            if(card.isFaceUp){
@@ -215,6 +319,7 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
 
             rowLinearLayout.add(cardView)
             cardMap.add(card to cardView)
+
         }
 
     }
@@ -232,6 +337,14 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         if(game.passCounter == 2) {
             refreshAfterGameEnd(mutableListOf(game.player1, game.player2))
         }
+        pairs.clear()
+        if(pairViews.isNotEmpty()) {
+            pairViews.first().scale(1)
+            if(pairViews.size == 2){
+                pairViews.last().scale(1)
+            }
+            pairViews.clear()
+        }
     }
 
     override fun refreshAfterDrawCard() {
@@ -239,6 +352,15 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
         checkNotNull(game) { "No game found." }
         moveCardView(cardMap.forward(game.reserveStack.first()),reserveStack)
         passCounter.text = "Passcounter : ${game.passCounter}"
+        pairs.clear()
+        if(pairViews.isNotEmpty()) {
+            pairViews.first().scale(1)
+            if(pairViews.size == 2){
+                pairViews.last().scale(1)
+            }
+            pairViews.clear()
+        }
+
     }
     override fun refreshAfterRemovePair(card1:Card,card2:Card):Unit{
         val game = rootService.currentGame
@@ -284,7 +406,6 @@ class MainGameScene(private val rootService: RootService): BoardGameScene(1920, 
     }
 
     }
-
 
     override fun refreshAfterSwitchPlayer() {
         val game = rootService.currentGame

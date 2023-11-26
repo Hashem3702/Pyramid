@@ -3,23 +3,30 @@ package view
 import service.RootService
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.MenuScene
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
 
-class PreGameScene(private val rootService: RootService): MenuScene(400, 1080), Refreshable {
+/**
+ * this is the preScene that will be seen when game starts
+ */
+class PreGameScene(): MenuScene(600, 1080), Refreshable {
     val quitButton = Button(
-        width = 140, height = 35,
-        posX = 50, posY = 240,
-        text = "Quit"
+        width = 300, height = 85,
+        posX = 150, posY = 500,
+        text = "Quit",
+        font = Font(24.0, Color.WHITE,"Open Sans", Font.FontWeight.BOLD)
     ).apply {
-        visual = ColorVisual(221, 136, 136)
+        visual = ColorVisual(Color(0xFF7261))
     }
 
     val playButton = Button(
-        width = 140, height = 35,
-        posX = 210, posY = 240,
-        text = "Play"
+        width = 400, height = 120,
+        posX = 100, posY = 240,
+        text = "Play",
+        font = Font(24.0, Color.WHITE,"Open Sans", Font.FontWeight.BOLD)
     ).apply {
-        visual = ColorVisual(136, 221, 136)
+        visual = ColorVisual(Color(0x81BA29))
     }
 
     init {

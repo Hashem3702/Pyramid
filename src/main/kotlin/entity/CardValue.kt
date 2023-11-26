@@ -46,6 +46,11 @@ enum class CardValue {
             KING -> "K"
             ACE -> "A"
         }
+
+    /**
+     * provide a single character to represent this value.
+     *  Returns one of: 2/3/4/5/6/7/8/9/10/11/12/13/1
+     */
      fun toInt():Int =
         when(this) {
             TWO -> 2
