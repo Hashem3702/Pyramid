@@ -86,6 +86,10 @@ class PyramidApplication:BoardGameApplication("Pyramid"),Refreshable {
     override fun refreshAfterGameEnd(result:MutableList<Player>) {
         this.showMenuScene(endGameMenuScene)
     }
+
+    /**
+     * function to avoide recursive problems
+     */
     fun preScene(){
         this.showMenuScene(preGameScene)
     }
