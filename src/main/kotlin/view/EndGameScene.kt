@@ -16,7 +16,7 @@ import java.awt.Color
  * as well as the score. Also, there are two buttons: one for starting a new game and one for
  * quitting the program.
  */
-class EndGameScene(): MenuScene(700, 1080), Refreshable {
+class EndGameScene: MenuScene(700, 1080), Refreshable {
 
     private val p2Score = Label(width = 500, height = 60, posX = 50, posY = 150,
         alignment = Alignment.CENTER,

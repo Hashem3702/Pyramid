@@ -9,9 +9,9 @@ import java.awt.Color
 
 //
 /**
- * this is the preScene that will be seen when game starts
+ * this is the preScene that will be seen when game starts.
  */
-class PreGameScene(): MenuScene(600, 1080), Refreshable {
+class PreGameScene: MenuScene(600, 1080), Refreshable {
     val quitButton = Button(
         width = 300, height = 85,
         posX = 150, posY = 500,
